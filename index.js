@@ -1,3 +1,4 @@
+
 /* Your Code Here */
 
 /*
@@ -8,6 +9,64 @@
  As a result, the lessons for this function will pass *and* it will be available
  for you to use if you need it!
  */
+
+ let createEmployeeRecord = function(row) {
+    return {
+        firstName: row[0],
+        familyName: row[1],
+        title: row[2],
+        payPerHour: row[3],
+        timeInEvents: [],
+        timeOutEvents: []
+
+ } 
+}
+
+let createEmployeeRecords = function(employeeDataRow) {
+    return employeeDataRow.map(function(row){
+        return createEmployeeRecord(row)
+    })
+}
+
+let createTimeInEvent = function(dateStamp) {
+    let [date, hour] = dateStamp.split(' ')
+    this.timeInEvents.push({
+        type: "TimeIn",
+        hour: parseInt(hour, 10),
+        date,
+    })
+    return this
+}
+
+let createTimeOutEvent = function(dateStamp) {
+    let [date, hour] = dateStamp.split(' ')
+
+    this.timeOutEvents.push ({
+        type: "TimeOut",
+        hour: parseInt(hour, 10),
+        date,
+    })
+    return this
+}
+
+let hoursWorkedOnDate = function(findDate) {
+
+    let inEvent = this.timeInEvents.find(function(e){
+        return e.date === findDate
+    })
+
+    let outEvent = this.timeOutEvents.find(function(e){
+        return e.date === findDate
+    })
+    return (outEvent.hour - inEvent.hour) / 100
+}
+
+let wagesEarnedOnDate = function(findDate){
+    let rawWage = hoursWorkedOnDate.call(this, findDate)
+    * this.payPerHour
+    return parseFloat(rawWage.toString())
+}
+
 
 const allWagesFor = function () {
     const eligibleDates = this.timeInEvents.map(function (e) {
@@ -21,3 +80,15 @@ const allWagesFor = function () {
     return payable
 }
 
+let findEmployeeByFirstName = function(srcArray, firstName) {
+    return srcArray.find(function(rec){
+        return rec.firstName === firstName
+    })
+}
+
+
+let calculatePayroll = function(arrayOfEmployeeRecords){
+    return arrayOfEmployeeRecords.reduce(function(memo, rec){
+        return memo + allWagesFor.call(rec)
+    }, 0)
+}
